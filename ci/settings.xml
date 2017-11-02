@@ -5,12 +5,12 @@
 
 	<servers>
 		<server>
-			<id>ixxus-releases</id>
+			<id>monorepo-releases</id>
 			<username>admin</username>
 			<password>admin123</password>
 		</server>
 		<server>
-			<id>ixxus-snapshots</id>
+			<id>monorepo-snapshots</id>
 			<username>admin</username>
 			<password>admin123</password>
 		</server>
@@ -25,8 +25,8 @@
 			</properties>
 			<repositories>
 				<repository>
-					<id>ixxus-releases</id>
-					<url>http://192.168.0.11:32768/repository/ixxus-releases/</url>
+					<id>monorepo-releases</id>
+					<url>http://192.168.0.11:32768/repository/monorepo-releases/</url>
 					<releases>
 						<enabled>true</enabled>
 					</releases>
@@ -35,8 +35,8 @@
 					</snapshots>
 				</repository>
 				<repository>
-					<id>ixxus-snapshots</id>
-					<url>http://192.168.0.11:32768/repository/ixxus-snapshots/</url>
+					<id>monorepo-snapshots</id>
+					<url>http://192.168.0.11:32768/repository/monorepo-snapshots/</url>
 					<releases>
 						<enabled>false</enabled>
 					</releases>
