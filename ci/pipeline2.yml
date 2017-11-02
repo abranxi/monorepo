@@ -8,7 +8,8 @@ resource_types:
   - name: maven-cache
     type: docker-image
     source:
-      repository: abranxi/maven-cache-resource
+      #repository: abranxi/maven-cache-resource
+      repository: olhtbr/maven-cache-resource
       tag: latest
 resources:
   # Git Resources
@@ -58,8 +59,8 @@ resources:
         # Custom Maven settings.xml URL
         #url: 
         # Base pom.xml file
-      pom-file: pom.xml
-      settings-file: ci/settings.xml
+      #pom-file: pom.xml
+      #settings-file: ci/settings.xml
   # Nexus Resources
   - name: artifact-global-lib-for-all-modules
     type: maven-resource
