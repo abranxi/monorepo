@@ -1,0 +1,15 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: maven
+    tag: latest
+
+inputs:
+  - name: git-repo-global-lib
+
+run:
+  path: mvn
+  args: ["clean", "install"]
+  dir: git-repo-global-lib/practice-objectives/FY18-Q2/monorepo/global-lib-for-all-modules

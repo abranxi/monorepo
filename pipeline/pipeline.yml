@@ -1,0 +1,45 @@
+resources:
+  - name: git-repo
+    type: git
+    source:
+      uri: git@github.com:ixxus/technology-knowledge-library.git
+      branch: OBJECTIVE-415
+      private_key: ((private-repo-key))
+      
+jobs:
+  - name: test-and-build
+    plan:
+    - get: git-repo
+      trigger: true
+    - task: detect-changes
+      privileged: true
+      file: git-repo/practice-objectives/FY18-Q2/monorepo/pipeline/detect-changes.yml
+#  - name: maven-verify
+#    plan:
+#    - get: git-repo
+#      passed: [detect-changes]
+#      trigger: true
+    - task: maven-verify
+      privileged: true
+      file: git-repo/practice-objectives/FY18-Q2/monorepo/pipeline/maven-verify.yml
+#  - name: maven-package
+#    plan:
+#    - get: git-repo
+#      passed: [maven-verify]
+#      trigger: true
+    - task: maven-package
+      privileged: true
+      file: git-repo/practice-objectives/FY18-Q2/monorepo/pipeline/maven-package.yml
+  - name: release-service-a
+    plan:
+    - get: git-repo
+    - task: release-service-a
+      privileged: true
+      file: git-repo/practice-objectives/FY18-Q2/monorepo/pipeline/release-service-a.yml
+  - name: release-service-b
+    plan:
+    - get: git-repo
+    - task: release-service-b
+      privileged: true
+      file: git-repo/practice-objectives/FY18-Q2/monorepo/pipeline/release-service-b.yml
+  

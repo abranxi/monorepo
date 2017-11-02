@@ -1,0 +1,322 @@
+# External resource type
+resource_types:
+  - name: maven-resource
+    type: docker-image
+    source:
+      repository: pivotalpa/maven-resource
+      tag: latest
+  - name: maven-cache
+    type: docker-image
+    source:
+      repository: abranxi/maven-cache-resource
+      tag: latest
+resources:
+  # Git Resources
+  - name: git-repo-all
+    type: git
+    source: &git_repo
+      uri: git@github.com:ixxus/technology-knowledge-library.git
+      branch: OBJECTIVE-415
+      private_key: ((private-repo-key))
+  - name: git-repo-global-lib
+    type: git
+    source:
+      <<: *git_repo
+      paths: ["practice-objectives/FY18-Q2/monorepo/global-lib-for-all-modules/**"]
+  - name: git-repo-lib-for-a
+    type: git
+    source:
+      <<: *git_repo
+      paths: ["practice-objectives/FY18-Q2/monorepo/lib-for-service-a/**"]
+  - name: git-repo-lib-for-b
+    type: git
+    source:
+      <<: *git_repo
+      paths: ["practice-objectives/FY18-Q2/monorepo/lib-for-service-b/**"]
+  - name: git-repo-service-a
+    type: git
+    source:
+      <<: *git_repo
+      paths: ["practice-objectives/FY18-Q2/monorepo/service-a/**"]
+  - name: git-repo-service-b
+    type: git
+    source:
+      <<: *git_repo
+      paths: ["practice-objectives/FY18-Q2/monorepo/service-b/**"]
+  # Resource for caching Maven dependencies
+  - name: maven-cache
+    type: maven-cache # Defined in resource_types
+    source:
+      <<: *git_repo     # We want to cache dependencies of the git-repo-all,
+      paths:            # but interested only in the pom.xml, which declares dependencies
+        - practice-objectives/FY18-Q2/monorepo/global-lib-for-all-modules/pom.xml
+        - practice-objectives/FY18-Q2/monorepo/lib-for-service-a/pom.xml
+        - practice-objectives/FY18-Q2/monorepo/lib-for-service-b/pom.xml
+        - practice-objectives/FY18-Q2/monorepo/service-a/pom.xml
+        - practice-objectives/FY18-Q2/monorepo/service-b/pom.xml
+      settings:
+        # Custom Maven settings.xml URL
+        #url: https://raw.githubusercontent.com/ixxus/technology-knowledge-library/OBJECTIVE-415/practice-objectives/FY18-Q2/monorepo/pipeline/settings.xml?token=ABKdgYRYgcYRkmBXlaiqJI-PtqwB8-pwks5aBAhVwA%3D%3D
+        # Base pom.xml file
+      pom-file: practice-objectives/FY18-Q2/monorepo/pom.xml
+      settings-file: practice-objectives/FY18-Q2/monorepo/pipeline/settings.xml
+  # Nexus Resources
+  - name: artifact-global-lib-for-all-modules
+    type: maven-resource
+    source: &artifact
+      url: http://192.168.0.11:32768/repository/ixxus-releases/
+      snapshot_url: http://192.168.0.11:32768/repository/ixxus-snapshots/
+      artifact: com.ixxus.monorepo:global-lib-for-all-modules:jar
+      username: ((nexus-user))
+      password: ((nexus-password))
+  - name: artifact-lib-for-service-a
+    type: maven-resource
+    source:
+      <<: *artifact
+      artifact: com.ixxus.monorepo:lib-for-service-a:jar
+  - name: artifact-lib-for-service-b
+    type: maven-resource
+    source:
+      <<: *artifact
+      artifact: com.ixxus.monorepo:lib-for-service-b:jar
+  - name: artifact-service-a
+    type: maven-resource
+    source:
+      <<: *artifact
+      artifact: com.ixxus.monorepo:service-a:jar
+  - name: artifact-service-b
+    type: maven-resource
+    source:
+      <<: *artifact
+      artifact: com.ixxus.monorepo:service-b:jar
+   # Semver Resources   
+  - name: global-lib-version
+    type: semver
+    source: &semver_conf
+      driver: git
+      uri: git@github.com:ixxus/technology-knowledge-library.git
+      branch: version
+      file: global-lib-version
+      private_key: ((private-repo-key))
+  - name: lib-for-a-version
+    type: semver
+    source:
+      <<: *semver_conf
+      file: lib-for-a-version
+  - name: lib-for-b-version
+    type: semver
+    source:
+      <<: *semver_conf
+      file: lib-for-b-version
+  - name: service-a-version
+    type: semver
+    source:
+      <<: *semver_conf
+      file: service-a-version
+  - name: service-b-version
+    type: semver
+    source:
+      <<: *semver_conf
+      file: service-b-version
+      
+jobs:
+  - name: build-global
+    serial: true
+    plan:
+    - get: git-repo-global-lib
+      trigger: true
+    - get: git-repo-all
+    - get: maven-cache  # Don't trigger on changes to the cache
+    - put: global-lib-version
+      params: {bump: minor}
+    - task: build-global
+      privileged: true
+      #TODO externalize
+      #file: git-repo-global-lib/practice-objectives/FY18-Q2/monorepo/pipeline/build-global.yml
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: latest
+        inputs:
+          - name: global-lib-version
+          - name: git-repo-all
+          - name: maven-cache
+        outputs:
+          - name: global-output
+          - name: git-repo-all-out
+        run:
+          path: git-repo-all/practice-objectives/FY18-Q2/monorepo/pipeline/build-global-lib-for-all-modules.sh
+        #caches:
+        #- path: /root/.m2/repository/
+        params:
+          GIT_EMAIL: {{git-email}}
+          GIT_NAME: {{git-name}}
+    - put: git-repo-all
+      params: {repository: git-repo-all-out, rebase: true}
+    - put: artifact-global-lib-for-all-modules
+      params:
+        file: global-output/global-lib-for-all-modules-*.jar
+        pom_file: git-repo-all/practice-objectives/FY18-Q2/monorepo/global-lib-for-all-modules/pom.xml
+  - name: build-lib-for-service-a
+    serial: true
+    plan:
+    - get: git-repo-lib-for-a
+      trigger: true
+    - get: global-lib-version
+      trigger: true
+      passed: ['build-global']
+    - get: git-repo-all
+    - put: lib-for-a-version
+      params: {bump: minor}
+    - task: build-lib-for-service-a
+      privileged: true
+      #TODO externalize
+      #file: git-repo-global-lib/practice-objectives/FY18-Q2/monorepo/pipeline/build-global.yml
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: latest
+        inputs:
+          - name: git-repo-all
+          - name: lib-for-a-version
+        outputs:
+          - name: global-output
+          - name: git-repo-all-out
+        run:
+          path: git-repo-all/practice-objectives/FY18-Q2/monorepo/pipeline/build-lib-for-service-a.sh
+        #caches:
+        #- path: /root/.m2/repository/
+        params:
+          GIT_EMAIL: {{git-email}}
+          GIT_NAME: {{git-name}}
+    - put: git-repo-all
+      params: {repository: git-repo-all-out, rebase: true}
+    - put: artifact-lib-for-service-a
+      params:
+        file: global-output/lib-for-service-a-*.jar
+        pom_file: git-repo-all/practice-objectives/FY18-Q2/monorepo/lib-for-service-a/pom.xml
+  - name: build-lib-for-service-b
+    serial: true
+    plan:
+    - get: git-repo-lib-for-b
+      trigger: true
+    - get: global-lib-version
+      trigger: true
+      passed: ['build-global']
+    - get: git-repo-all
+    - put: lib-for-b-version
+      params: {bump: minor}
+    - task: build-lib-for-service-b
+      privileged: true
+      #TODO externalize
+      #file: git-repo-global-lib/practice-objectives/FY18-Q2/monorepo/pipeline/build-global.yml
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: latest
+        inputs:
+          - name: git-repo-all
+          - name: lib-for-b-version
+        outputs:
+          - name: global-output
+          - name: git-repo-all-out
+        run:
+          path: git-repo-all/practice-objectives/FY18-Q2/monorepo/pipeline/build-lib-for-service-b.sh
+        #caches:
+        #- path: /root/.m2/repository/
+        params:
+          GIT_EMAIL: {{git-email}}
+          GIT_NAME: {{git-name}}
+    - put: git-repo-all
+      params: {repository: git-repo-all-out, rebase: true}
+    - put: artifact-lib-for-service-b
+      params:
+        file: global-output/lib-for-service-b-*.jar
+        pom_file: git-repo-all/practice-objectives/FY18-Q2/monorepo/lib-for-service-b/pom.xml
+  - name: build-service-a
+    plan:
+    - get: git-repo-service-a
+      trigger: true
+    - get: lib-for-a-version
+      trigger: true
+      passed: ['build-lib-for-service-a']
+    - get: git-repo-all
+    - put: service-a-version
+      params: {bump: minor}
+    - task: build-service-a
+      privileged: true
+      #file: git-repo-global-lib/practice-objectives/FY18-Q2/monorepo/pipeline/build-global.yml
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: latest
+        inputs:
+          - name: git-repo-all
+          - name: service-a-version
+        outputs:
+          - name: global-output
+          - name: git-repo-all-out
+        run:
+          path: git-repo-all/practice-objectives/FY18-Q2/monorepo/pipeline/build-service-a.sh
+        #caches:
+        #- path: /root/.m2/repository/
+        params:
+          GIT_EMAIL: {{git-email}}
+          GIT_NAME: {{git-name}}
+    - put: git-repo-all
+      params: {repository: git-repo-all-out, rebase: true}
+    - put: artifact-service-a
+      params:
+        file: global-output/service-a-*.jar
+        pom_file: git-repo-all/practice-objectives/FY18-Q2/monorepo/service-a/pom.xml
+  - name: build-service-b
+    plan:
+    - get: git-repo-service-b
+      trigger: true
+    - get: lib-for-b-version
+      trigger: true
+      passed: ['build-lib-for-service-b']
+    - get: git-repo-all
+    - put: service-b-version
+      params: {bump: minor}
+    - task: build-service-b
+      privileged: true
+      #file: git-repo-global-lib/practice-objectives/FY18-Q2/monorepo/pipeline/build-global.yml
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: latest
+        inputs:
+          - name: git-repo-all
+          - name: service-b-version
+        outputs:
+          - name: global-output
+          - name: git-repo-all-out
+        run:
+          path: git-repo-all/practice-objectives/FY18-Q2/monorepo/pipeline/build-service-b.sh
+        #caches:
+        #- path: /root/.m2/repository/
+        params:
+          GIT_EMAIL: {{git-email}}
+          GIT_NAME: {{git-name}}
+    - put: git-repo-all
+      params: {repository: git-repo-all-out, rebase: true}
+    - put: artifact-service-b
+      params:
+        file: global-output/service-b-*.jar
+        pom_file: git-repo-all/practice-objectives/FY18-Q2/monorepo/service-b/pom.xml
