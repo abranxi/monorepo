@@ -59,7 +59,7 @@ resources:
         #url: 
         # Base pom.xml file
       pom-file: pom.xml
-      settings-file: pipeline/settings.xml
+      settings-file: ci/settings.xml
   # Nexus Resources
   - name: artifact-global-lib-for-all-modules
     type: maven-resource
@@ -132,7 +132,7 @@ jobs:
     - task: build-global
       privileged: true
       #TODO externalize
-      #file: git-repo-global-lib/pipeline/build-global.yml
+      #file: git-repo-global-lib/ci/build-global.yml
       config:
         platform: linux
         image_resource:
@@ -148,7 +148,7 @@ jobs:
           - name: global-output
           - name: git-repo-all-out
         run:
-          path: git-repo-all/pipeline/build-global-lib-for-all-modules.sh
+          path: git-repo-all/ci/build-global-lib-for-all-modules.sh
         #caches:
         #- path: /root/.m2/repository/
         params:
@@ -174,7 +174,7 @@ jobs:
     - task: build-lib-for-service-a
       privileged: true
       #TODO externalize
-      #file: git-repo-global-lib/pipeline/build-global.yml
+      #file: git-repo-global-lib/ci/build-global.yml
       config:
         platform: linux
         image_resource:
@@ -189,7 +189,7 @@ jobs:
           - name: global-output
           - name: git-repo-all-out
         run:
-          path: git-repo-all/pipeline/build-lib-for-service-a.sh
+          path: git-repo-all/ci/build-lib-for-service-a.sh
         #caches:
         #- path: /root/.m2/repository/
         params:
@@ -215,7 +215,7 @@ jobs:
     - task: build-lib-for-service-b
       privileged: true
       #TODO externalize
-      #file: git-repo-global-lib/pipeline/build-global.yml
+      #file: git-repo-global-lib/ci/build-global.yml
       config:
         platform: linux
         image_resource:
@@ -230,7 +230,7 @@ jobs:
           - name: global-output
           - name: git-repo-all-out
         run:
-          path: git-repo-all/pipeline/build-lib-for-service-b.sh
+          path: git-repo-all/ci/build-lib-for-service-b.sh
         #caches:
         #- path: /root/.m2/repository/
         params:
@@ -254,7 +254,7 @@ jobs:
       params: {bump: minor}
     - task: build-service-a
       privileged: true
-      #file: git-repo-global-lib/pipeline/build-global.yml
+      #file: git-repo-global-lib/ci/build-global.yml
       config:
         platform: linux
         image_resource:
@@ -269,7 +269,7 @@ jobs:
           - name: global-output
           - name: git-repo-all-out
         run:
-          path: git-repo-all/pipeline/build-service-a.sh
+          path: git-repo-all/ci/build-service-a.sh
         #caches:
         #- path: /root/.m2/repository/
         params:
@@ -293,7 +293,7 @@ jobs:
       params: {bump: minor}
     - task: build-service-b
       privileged: true
-      #file: git-repo-global-lib/pipeline/build-global.yml
+      #file: git-repo-global-lib/ci/build-global.yml
       config:
         platform: linux
         image_resource:
@@ -308,7 +308,7 @@ jobs:
           - name: global-output
           - name: git-repo-all-out
         run:
-          path: git-repo-all/pipeline/build-service-b.sh
+          path: git-repo-all/ci/build-service-b.sh
         #caches:
         #- path: /root/.m2/repository/
         params:

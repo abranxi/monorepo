@@ -13,5 +13,5 @@ outputs:
   - name: changed-projects
 
 run:
-  path: practice-objectives/FY18-Q2/monorepo/pipeline/detect-changes.sh
+  path: ci/detect-changes.sh
   dir: git-repo

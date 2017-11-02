@@ -5,7 +5,7 @@
 
 #Sample for just last commit
 echo "Detecting project changes..."
-projects=$(git diff HEAD~1 HEAD --name-only | awk 'BEGIN {FS="/"} {print $4}'| grep -v 'pipeline' | sort -u | paste -s -d, -)
+projects=$(git diff HEAD~1 HEAD --name-only | awk 'BEGIN {FS="/"} {print $4}'| grep -v 'ci' | sort -u | paste -s -d, -)
 if [ -z "$projects" ]; then
 	echo "No project has changed"
 	exit 1

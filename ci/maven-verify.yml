@@ -11,5 +11,5 @@ inputs:
   - name: changed-projects
 
 run:
-  path: practice-objectives/FY18-Q2/monorepo/pipeline/verify.sh
+  path: ci/verify.sh
   dir: git-repo

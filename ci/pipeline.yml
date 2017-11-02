@@ -13,7 +13,7 @@ jobs:
       trigger: true
     - task: detect-changes
       privileged: true
-      file: git-repo/pipeline/detect-changes.yml
+      file: git-repo/ci/detect-changes.yml
 #  - name: maven-verify
 #    plan:
 #    - get: git-repo
@@ -21,7 +21,7 @@ jobs:
 #      trigger: true
     - task: maven-verify
       privileged: true
-      file: git-repo/pipeline/maven-verify.yml
+      file: git-repo/ci/maven-verify.yml
 #  - name: maven-package
 #    plan:
 #    - get: git-repo
@@ -29,17 +29,17 @@ jobs:
 #      trigger: true
     - task: maven-package
       privileged: true
-      file: git-repo/pipeline/maven-package.yml
+      file: git-repo/ci/maven-package.yml
   - name: release-service-a
     plan:
     - get: git-repo
     - task: release-service-a
       privileged: true
-      file: git-repo/pipeline/release-service-a.yml
+      file: git-repo/ci/release-service-a.yml
   - name: release-service-b
     plan:
     - get: git-repo
     - task: release-service-b
       privileged: true
-      file: git-repo/pipeline/release-service-b.yml
+      file: git-repo/ci/release-service-b.yml
   
