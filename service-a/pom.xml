@@ -34,7 +34,7 @@
         <dependency>
             <groupId>com.test.monorepo</groupId>
             <artifactId>lib-for-service-a</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.2.0</version>
         </dependency>
     </dependencies>
 
