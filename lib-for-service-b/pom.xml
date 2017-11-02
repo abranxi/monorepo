@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.test.monorepo</groupId>
             <artifactId>global-lib-for-all-modules</artifactId>
-            <version>0.1.0</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
