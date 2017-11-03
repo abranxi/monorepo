@@ -160,7 +160,7 @@ jobs:
     - put: artifact-global-lib-for-all-modules
       params:
         file: global-output/global-lib-for-all-modules-*.jar
-        pom_file: git-repo-all/global-lib-for-all-modules/pom.xml
+        pom_file: git-repo-all-out/global-lib-for-all-modules/pom.xml
   - name: build-lib-for-service-a
     serial: true
     plan:

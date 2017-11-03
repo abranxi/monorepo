@@ -18,3 +18,6 @@ git commit -m "[ci skip] New global-lib-for-all-modules module version $NEW_VERS
 echo "Creating new tag global-lib-v$NEW_VERSION..."
 git tag -a global-lib-v$NEW_VERSION -m "New global-lib-for-all-modules module version $NEW_VERSION"
 git push origin global-lib-v$NEW_VERSION
+cd ../git-repo-all
+git push origin global-lib-v$NEW_VERSION
+cd ..
