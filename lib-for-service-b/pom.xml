@@ -6,7 +6,7 @@
 
     <groupId>com.test.monorepo</groupId>
     <artifactId>lib-for-service-b</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
 
     <packaging>jar</packaging> 
 
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.test.monorepo</groupId>
             <artifactId>global-lib-for-all-modules</artifactId>
-            <version>0.2.0</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

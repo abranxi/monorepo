@@ -6,7 +6,7 @@
 
     <groupId>com.test.monorepo</groupId>
     <artifactId>service-a</artifactId>
-    <version>0.2.0</version>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>com.test.monorepo</groupId>
             <artifactId>lib-for-service-a</artifactId>
-            <version>0.3.0</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
