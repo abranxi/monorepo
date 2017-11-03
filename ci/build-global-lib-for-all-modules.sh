@@ -9,9 +9,9 @@ echo "Moving jar to output folder..."
 mv git-repo-all-out/global-lib-for-all-modules/target/*.jar global-output/
 echo "Cleaning..."
 mvn -Dmaven.repo.local=maven-cache -s git-repo-all-out/ci/settings.xml -f git-repo-all-out/global-lib-for-all-modules/pom.xml clean
-echo "Commiting changes..."
-git config --global user.email "${GIT_EMAIL}"
-git config --global user.name "${GIT_NAME}"
-cd git-repo-all-out
-git add .
-git commit -m "[ci skip] New global-lib-for-all-modules module version $NEW_VERSION"
+#echo "Commiting changes..."
+#git config --global user.email "${GIT_EMAIL}"
+#git config --global user.name "${GIT_NAME}"
+#cd git-repo-all-out
+#git add .
+#git commit -m "[ci skip] New global-lib-for-all-modules module version $NEW_VERSION"
