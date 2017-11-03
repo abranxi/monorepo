@@ -16,7 +16,7 @@ resources:
   - name: git-repo-all
     type: git
     source: &git_repo
-      uri: https://github.com/abranxi/monorepo.git
+      uri: git@github.com:abranxi/monorepo.git
       branch: master
       private_key: ((private-repo-key))
   - name: git-repo-global-lib
@@ -95,7 +95,7 @@ resources:
     type: semver
     source: &semver_conf
       driver: git
-      uri: https://github.com/abranxi/monorepo.git
+      uri: git@github.com:abranxi/monorepo.git
       branch: version
       file: global-lib-version
       private_key: ((private-repo-key))
