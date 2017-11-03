@@ -1,7 +1,7 @@
 package com.test.monorepo;
 
 /**
- * Some Utilities for Strings
+ * Some Utilities for Strings. Additional comment
  * 
  * @author aayala
  *
@@ -17,9 +17,9 @@ public class UtilsForServiceA {
     public String doSomethingWithString(String entry) {
         return entry.toUpperCase();
     }
-    
+
     /**
-     * Transform a String to lowercase 
+     * Transform a String to lowercase
      * 
      * @param entry
      * @return
