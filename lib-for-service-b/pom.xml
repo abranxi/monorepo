@@ -33,7 +33,7 @@
                     <releaseGoals>
                         <releaseGoal>deploy</releaseGoal>
                     </releaseGoals>
-                    <serverId>github</serverId>
+                    <serverId>github-server</serverId>
                 </configuration>
             </plugin>
         </plugins>
