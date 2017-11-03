@@ -5,8 +5,9 @@ echo "Setting new global-lib-for-all-modules module version to $NEW_VERSION..."
 mvn -s git-repo-all/ci/settings.xml -f git-repo-all/global-lib-for-all-modules/pom.xml versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -DoldVersion='*'
 echo "Building global-lib-for-all-modules module..."
 mvn -s git-repo-all/ci/settings.xml -f git-repo-all/global-lib-for-all-modules/pom.xml clean install
-echo "Moving jar to output folder..."
-mv git-repo-all/global-lib-for-all-modules/target/*.jar global-output/
+echo "Moving jar and pom.xml to output folder..."
+cp git-repo-all/global-lib-for-all-modules/target/*.jar global-output/
+cp git-repo-all/global-lib-for-all-modules/pom.xml global-output/
 echo "Cleaning..."
 mvn -s git-repo-all/ci/settings.xml -f git-repo-all/global-lib-for-all-modules/pom.xml clean
 echo "Commiting changes..."
