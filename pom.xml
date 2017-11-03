@@ -6,7 +6,7 @@
 
     <groupId>com.test.monorepo</groupId>
     <artifactId>monorepo</artifactId>
-    <version>1.O-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
