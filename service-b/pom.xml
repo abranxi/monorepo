@@ -21,7 +21,7 @@
             <version>1.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
+    
     <build>
         <plugins>
             <plugin>
@@ -37,4 +37,16 @@
             </plugin>
         </plugins>
     </build>    
+    
+    <distributionManagement>
+        <snapshotRepository>
+            <id>local.repo</id>
+            <url>http://192.168.0.11:32768/repository/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>local.repo</id>
+            <url>http://192.168.0.11:32768/repository/releases/</url>
+        </repository>
+    </distributionManagement>
+    
 </project>
