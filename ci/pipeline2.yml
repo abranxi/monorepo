@@ -155,8 +155,8 @@ jobs:
         params:
           GIT_EMAIL: {{git-email}}
           GIT_NAME: {{git-name}}
-    #- put: git-repo-all
-    #  params: {repository: git-repo-all-out, rebase: true, only_tag: true, tag_prefix: global-lib-v, tag: global-lib-version/version}
+    - put: git-repo-all
+      params: {repository: git-repo-all, rebase: true, only_tag: true, tag_prefix: global-lib-v, tag: global-lib-version/version}
     - put: artifact-global-lib-for-all-modules
       params:
         file: global-output/global-lib-for-all-modules-*.jar
