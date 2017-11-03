@@ -5,12 +5,12 @@ resource_types:
     source:
       repository: pivotalpa/maven-resource
       tag: latest
-  - name: maven-cache
-    type: docker-image
-    source:
-      repository: abranxi/maven-cache-resource
-      #repository: olhtbr/maven-cache-resource
-      tag: latest
+  #- name: maven-cache
+  #  type: docker-image
+  #  source:
+  #    repository: abranxi/maven-cache-resource
+  #    #repository: olhtbr/maven-cache-resource
+  #    tag: latest
 resources:
   # Git Resources
   - name: git-repo-all
@@ -45,28 +45,28 @@ resources:
       <<: *git_repo
       paths: ["service-b/**"]
   # Resource for caching Maven dependencies
-  - name: maven-cache
-    type: maven-cache # Defined in resource_types
-    source:
-      <<: *git_repo     # We want to cache dependencies of the git-repo-all,
-      paths:            # but interested only in the pom.xml, which declares dependencies
-        - global-lib-for-all-modules/pom.xml
-        - lib-for-service-a/pom.xml
-        - lib-for-service-b/pom.xml
-        - service-a/pom.xml
-        - service-b/pom.xml
-      settings:
-        # Custom Maven settings.xml URL
-        #url: 
-        # Base pom.xml file
-      #pom-file: pom.xml
-      settings-file: ci/settings.xml
+  #- name: maven-cache
+  #  type: maven-cache # Defined in resource_types
+  #  source:
+  #    <<: *git_repo     # We want to cache dependencies of the git-repo-all,
+  #    paths:            # but interested only in the pom.xml, which declares dependencies
+  #      - global-lib-for-all-modules/pom.xml
+  #      - lib-for-service-a/pom.xml
+  #      - lib-for-service-b/pom.xml
+  #      - service-a/pom.xml
+  #      - service-b/pom.xml
+  #    settings:
+  #      # Custom Maven settings.xml URL
+  #      #url: 
+  #      # Base pom.xml file
+  #    #pom-file: pom.xml
+  #    settings-file: ci/settings.xml
   # Nexus Resources
   - name: artifact-global-lib-for-all-modules
     type: maven-resource
     source: &artifact
-      url: http://192.168.0.11:32768/repository/monorepo-releases/
-      snapshot_url: http://192.168.0.11:32768/repository/monorepo-snapshots/
+      url: http://192.168.0.11:32768/repository/releases/
+      snapshot_url: http://192.168.0.11:32768/repository/snapshots/
       artifact: com.test.monorepo:global-lib-for-all-modules:jar
       username: ((nexus-user))
       password: ((nexus-password))
@@ -127,7 +127,7 @@ jobs:
     - get: git-repo-global-lib
       trigger: true
     - get: git-repo-all
-    - get: maven-cache  # Don't trigger on changes to the cache
+    #- get: maven-cache  # Don't trigger on changes to the cache
     - put: global-lib-version
       params: {bump: minor}
     - task: build-global
@@ -144,7 +144,7 @@ jobs:
         inputs:
           - name: global-lib-version
           - name: git-repo-all
-          - name: maven-cache
+          #- name: maven-cache
         outputs:
           - name: global-output
           - name: git-repo-all-out
@@ -155,8 +155,8 @@ jobs:
         params:
           GIT_EMAIL: {{git-email}}
           GIT_NAME: {{git-name}}
-    - put: git-repo-all
-      params: {repository: git-repo-all-out, rebase: true, only_tag: true, tag_prefix: global-lib-v, tag: global-lib-version/version}
+    #- put: git-repo-all
+    #  params: {repository: git-repo-all-out, rebase: true, only_tag: true, tag_prefix: global-lib-v, tag: global-lib-version/version}
     - put: artifact-global-lib-for-all-modules
       params:
         file: global-output/global-lib-for-all-modules-*.jar
