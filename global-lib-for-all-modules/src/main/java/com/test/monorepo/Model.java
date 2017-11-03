@@ -1,7 +1,7 @@
 package com.test.monorepo;
 
 /**
- * Sample class model.
+ * Sample class model. Additional comment
  * 
  * @author aayala
  *
