@@ -28,7 +28,9 @@
                     <releaseGoals>
                         <releaseGoal>deploy</releaseGoal>
                     </releaseGoals>
-                    <serverId>github</serverId>
+<!--                     <serverId>github</serverId> -->
+                    <privateKey>/Users/aayala/.ssh/id_rsa</privateKey>
+                    <passphrase>{Jtj1mzF6AbYHR5OO3lLVlSk3oGag4ux+/nx/GEI7IVI=}</passphrase>
                 </configuration>
             </plugin>
         </plugins>
