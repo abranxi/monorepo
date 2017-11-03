@@ -12,6 +12,7 @@ mvn -s git-repo-all-out/ci/settings.xml -f git-repo-all-out/global-lib-for-all-m
 echo "Commiting changes..."
 git config --global user.email "${GIT_EMAIL}"
 git config --global user.name "${GIT_NAME}"
+touch ~/.ssh/known_hosts
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 cd git-repo-all-out
 git add .
